@@ -1,0 +1,36 @@
+[project]
+name = "mas"
+version = "0.1.0"
+description = "Multi-agent orchestrator prototype (LangGraph + MCP)"
+requires-python = ">=3.11"
+dependencies = [
+    "langgraph>=1.2",
+    "langchain-core>=1.6",
+    "langchain-anthropic>=1.7",
+    "langchain-ollama>=1.1",
+    "mcp>=2.2",
+    "fastapi>=0.142",
+    "uvicorn>=0.54",
+    "httpx>=0.28",
+    "pyjwt>=2.15",
+    "pyyaml>=6.0",
+    "pydantic>=2.13",
+    "rich>=15.0",
+    # Pinned to the last pydantic-based release - 1.x moved to a protobuf-backed AgentCard/
+    # Message/Task surface, which is heavier and riskier to use correctly here.
+    "a2a-sdk==0.3.26",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=9.1", "pytest-asyncio>=1.4"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["mas*", "evals*"]

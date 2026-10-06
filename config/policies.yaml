@@ -1,0 +1,62 @@
+# RBAC configuration for the prototype.
+#
+# Password hashes are PBKDF2-HMAC-SHA256, 100k iterations, salt below (hex).
+# Demo passwords (for the CLI): alice/alice123, bob/bob123, carol/carol123, dave/dave123.
+# This is a prototype - do not reuse this scheme or these salts for anything real.
+
+roles:
+  engineer:
+    description: Infra-focused engineer. Can read infra state and scale, not restart.
+    agents: [infra]
+    tools:
+      - infra.get_service_status
+      - infra.list_incidents
+      - infra.scale_deployment
+
+  it_admin:
+    description: IT admin. Full IT support + can restart infra services.
+    agents: [infra, it_support]
+    tools:
+      - "it.*"
+      - infra.get_service_status
+      - infra.list_incidents
+      - infra.restart_service
+
+  employee:
+    description: Regular employee. Can raise tickets and request resources for themselves.
+    agents: [it_support, resource_alloc]
+    tools:
+      - it.create_ticket
+      - it.get_ticket_status
+      - it.list_my_tickets
+      - resources.check_quota
+      - resources.request_vm
+      - resources.request_laptop
+
+  manager:
+    description: Manager. Everything, including cross-team quota visibility and approvals.
+    agents: [infra, it_support, resource_alloc]
+    tools:
+      - "*"
+
+users:
+  alice:
+    team: platform
+    roles: [engineer]
+    salt: ad6b806a51891d192e4fb7da66082249
+    password_hash: 7962d4556933f7c6c7b12dbc5f6fa0a571e02f6c1137317ef95c77839498b59c
+  bob:
+    team: it
+    roles: [it_admin]
+    salt: 30b43da2fc1ee898ee487c0836c4fd6c
+    password_hash: 90f902902cacf32e81be697ea08e5b37f16a4b4035c228bfa1f130224450b50c
+  carol:
+    team: sales
+    roles: [employee]
+    salt: d6d48c847821e35c69a583444b0c41db
+    password_hash: 31f1b45ad9f4f536c94f04ff4879cf6b7519d0eb35b69c8e5140890b82a9b14f
+  dave:
+    team: platform
+    roles: [manager]
+    salt: 865a3d68f06e70c4b7451690e473494f
+    password_hash: ef2263dc0cf2eb41a9d4f715d0117f594c7241846ae0d9c30d29be29fb8feca9

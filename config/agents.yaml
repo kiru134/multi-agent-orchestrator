@@ -1,0 +1,38 @@
+# Ops/security config only - identity and behavior now live in code (mas/agents/*.py,
+# one BaseAgent subclass per agent). This file stays config-driven on purpose: a security
+# team should be able to rotate a secret or change an approval rule without touching Python.
+#
+# `secret_env` names the environment variable holding this agent's shared secret for the
+# auth handshake with the orchestrator. `dev_secret` is a prototype-only fallback used when
+# that env var is unset, so the demo runs out of the box.
+#
+# `tools` is the risk/approval policy per MCP tool (see mas/access/approval.py):
+# `approval: required` always gates it; `approval: conditional` + `condition` names a
+# predicate from mas/access/conditions.py that decides per-call.
+
+agents:
+  infra:
+    secret_env: INFRA_AGENT_SECRET
+    dev_secret: dev-infra-secret
+    tools:
+      infra.get_service_status: {risk: low}
+      infra.list_incidents: {risk: low}
+      infra.scale_deployment: {risk: medium, approval: conditional, condition: scale_above_threshold, approver_roles: [manager]}
+      infra.restart_service: {risk: high, approval: required, approver_roles: [manager]}
+
+  it_support:
+    secret_env: IT_AGENT_SECRET
+    dev_secret: dev-it-secret
+    tools:
+      it.create_ticket: {risk: low}
+      it.get_ticket_status: {risk: low}
+      it.list_my_tickets: {risk: low}
+      it.reset_password: {risk: high, approval: required, approver_roles: [manager, it_admin]}
+
+  resource_alloc:
+    secret_env: RESOURCES_AGENT_SECRET
+    dev_secret: dev-resources-secret
+    tools:
+      resources.check_quota: {risk: low}
+      resources.request_laptop: {risk: low}
+      resources.request_vm: {risk: medium, approval: conditional, condition: vm_over_quota, approver_roles: [manager]}

@@ -1,0 +1,4 @@
+[
+  {"id": "AST-1000", "type": "laptop", "model": "MacBook Pro 14", "assignee": "alice"},
+  {"id": "AST-1001", "type": "laptop", "model": "ThinkPad X1", "assignee": "bob"}
+]

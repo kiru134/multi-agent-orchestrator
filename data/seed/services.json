@@ -1,0 +1,5 @@
+[
+  {"id": "payments", "name": "payments", "status": "degraded", "replicas": 3, "owner_team": "platform"},
+  {"id": "auth", "name": "auth", "status": "healthy", "replicas": 2, "owner_team": "platform"},
+  {"id": "search", "name": "search", "status": "healthy", "replicas": 2, "owner_team": "platform"}
+]

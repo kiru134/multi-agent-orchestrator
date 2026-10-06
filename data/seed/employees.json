@@ -1,0 +1,6 @@
+[
+  {"id": "alice", "name": "Alice Nguyen", "team": "platform", "manager_id": "dave"},
+  {"id": "bob", "name": "Bob Martins", "team": "it", "manager_id": "dave"},
+  {"id": "carol", "name": "Carol Iyer", "team": "sales", "manager_id": "dave"},
+  {"id": "dave", "name": "Dave Okafor", "team": "platform", "manager_id": null}
+]

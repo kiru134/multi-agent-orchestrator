@@ -1,0 +1,36 @@
+# General runtime settings for the prototype.
+
+server:
+  host: 127.0.0.1
+  port: 8000
+
+jwt:
+  secret_env: MAS_JWT_SECRET
+  dev_secret: dev-only-jwt-secret-change-me-please-32bytes-min
+  user_token_ttl_seconds: 3600
+  agent_token_ttl_seconds: 900 # agents must re-authenticate periodically
+
+memory:
+  max_turns: 16          # per-thread sliding window, counts human+ai messages (tool pairs kept intact)
+  max_iterations_default: 6
+  session_idle_ttl_seconds: 1800
+
+reviews:
+  # how long a pending human-review request stays actionable before the CLI stops showing it
+  # (the underlying graph interrupt itself does not expire - this is just UX)
+  stale_after_seconds: 3600
+
+eval:
+  # Minimal-setup note: all scorers are deterministic/code-only right now (no LLM judge, no
+  # review_gate or model_fit dimensions - those come back with human review / model tiering).
+  weights:
+    routing: 0.25
+    tool_selection: 0.20
+    access_control: 0.25
+    data_leakage: 0.12
+    state_outcome: 0.10
+    answer_content: 0.06
+    efficiency: 0.02
+  thresholds:
+    pass: 80
+    warn: 60

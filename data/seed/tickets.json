@@ -1,0 +1,4 @@
+[
+  {"id": "TKT-1000", "requester": "alice", "title": "VPN drops every morning", "description": "VPN client disconnects around 9am daily.", "status": "open", "created_at": "2026-09-28T09:00:00Z"},
+  {"id": "TKT-1001", "requester": "carol", "title": "Monitor flickering", "description": "External monitor flickers on wake.", "status": "open", "created_at": "2026-09-29T14:30:00Z"}
+]

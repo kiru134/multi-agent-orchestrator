@@ -1,0 +1,39 @@
+# Tiered model catalogue + task -> tier policy.
+#
+# `provider_order` says which provider wins when more than one is configured/available.
+# Every tier needs a model that supports tool calls - both the orchestrator and every
+# sub-agent bind tools (delegate_to_* / MCP tools respectively).
+#
+# Minimal prototype note: only one tier is actually wired up right now (each agent's
+# `default_model_tier` in agents.yaml, and "orchestrator.main" below) - light/heavy and the
+# escalation rules are left in the catalogue for when per-task tiering comes back.
+
+provider_order: [anthropic, ollama]
+
+#
+# `temperature` is only honored for the ollama entries - current Claude models (adaptive
+# thinking by default) reject a non-default temperature, so mas/llm/factory.py never passes
+# it to ChatAnthropic. It's kept here anyway so the catalog shape stays provider-agnostic.
+tiers:
+  light:
+    anthropic: {model: claude-haiku-4-5, temperature: 0}
+    ollama: {model: "qwen2.5:3b", temperature: 0}
+  standard:
+    anthropic: {model: claude-sonnet-5-5, temperature: 0.2}
+    ollama: {model: "qwen2.5:7b", temperature: 0.2}
+  heavy:
+    anthropic: {model: claude-opus-5-5, temperature: 0.2}
+    ollama: {model: "qwen2.5:14b", temperature: 0.2}
+
+tasks:
+  orchestrator.main: standard
+  subagent.tool_loop: standard
+  eval.judge: heavy
+
+escalation:
+  complex_request: heavy
+  high_risk_tool: heavy
+  on_failure: next_tier # moves up at most one tier, at most once per run - not wired up yet
+
+ollama:
+  base_url: http://localhost:11434

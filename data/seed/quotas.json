@@ -1,0 +1,5 @@
+[
+  {"id": "platform", "team": "platform", "vm_limit": 5, "vm_used": 2},
+  {"id": "it", "team": "it", "vm_limit": 3, "vm_used": 1},
+  {"id": "sales", "team": "sales", "vm_limit": 2, "vm_used": 2}
+]
